@@ -1,0 +1,24 @@
+{% extends('base.html.twig') %}
+
+{% block body %}
+    <div class="container">
+        <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="nav-link">
+                    <a class="btn btn-outline-info" href="{{ path('user_list') }}">Vartotojai</a>
+                    <a class="btn btn-outline-info" href="{{ path('create_new_user') }}">Kurti naują</a>
+                </div>
+            {% endif %}
+            {% if app.user %}
+                <div class="nav-link">
+                    Jūs esate prisijungęs {{ app.user.name }}, <a href="{{ path('app_logout') }}">Atsijungti</a>
+                </div>
+            {% endif %}
+        </nav>
+        <div class="card">
+            <div class="card-body">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

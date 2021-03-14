@@ -1,15 +1,38 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    encoders:
+        App\Entity\User:
+            algorithm: bcrypt
     providers:
         users_in_memory: { memory: null }
+        chain_provider:
+            chain:
+                providers: [user_provider]
+#        admin:
+#            memory:
+#                users:
+#                    admin@admin.lt: { password: '$2y$13$c2lIqTUnuPWMsd2ph9vr4.ZM1YphJ3vE4jnGdUZpF/wvRbJjLa5XS', roles: [ 'ROLE_ADMIN' ] }
+        user:
+            name: user_provider
+            entity:
+                class: App\Entity\User
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            anonymous: true
+        user:
+            pattern: ^/
+            anonymous: ~
             lazy: true
-            provider: users_in_memory
+            provider: user_provider
+            guard:
+                authenticators:
+                    - App\Security\LoginFormAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -20,5 +43,5 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+         - { path: ^/admin, roles: [ROLE_ADMIN] }
         # - { path: ^/profile, roles: ROLE_USER }

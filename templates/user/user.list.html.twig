@@ -1,0 +1,31 @@
+{% extends('layout.html.twig') %}
+
+{% block content %}
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Vardas</th>
+            <th scope="col">El.paštas</th>
+            <th scope="col">Veiksmai</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <th scope="row">{{ loop.index }}.</th>
+                <td>{{ user.getName() }}</td>
+                <td>{{ user.getEmail() }}</td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ path('edit_user', {'id' : user.getId()}) }}" type="button" class="btn btn-warning">Keisti</a>
+                        <a href="{{ path('delete_user', {'id' : user.getId()}) }}" type="button" class="btn btn-danger">Trinti</a>
+                    </div>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4">Registruotų vartotojų nėra.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
