@@ -1,0 +1,10 @@
+{% extends('layout.html.twig') %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h1 class="display-4">Sveiki, prisijungę, <strong>{{ app.user.name }}</strong>!</h1>
+        <p class="lead">Deja šiame puslapyje jums nėra daugiau ką veikti.</p>
+        <hr class="my-4">
+        <p>Linkime gražios dienos!</p>
+    </div>
+{% endblock %}
