@@ -42,6 +42,14 @@ class FrontController extends AbstractController
             return $this->redirectToRoute('user_list');
         }
 
+        if (!$user->isActive()) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $user->setLastLoginDate(new \DateTime('now'));
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
 
         return $this->render('homepage.html.twig');
     }

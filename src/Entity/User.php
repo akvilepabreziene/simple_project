@@ -4,8 +4,8 @@
 namespace App\Entity;
 
 use App\Constant\Role;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
@@ -19,8 +19,17 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User implements UserInterface
 {
-    use TimestampableEntity;
 
+    /**
+     * @var DateTime
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdAt;
+    /**
+     * @var DateTime
+     * @ORM\Column(type="datetime")
+     */
+    protected $updatedAt;
     /**
      * @var string
      * @ORM\Id
@@ -49,6 +58,16 @@ class User implements UserInterface
      * @ORM\Column(type="json")
      */
     private $roles = [];
+    /**
+     * @var DateTime|null
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastLoginDate;
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", options={"default":true})
+     */
+    private $active = true;
 
     /**
      * @return string
@@ -138,7 +157,7 @@ class User implements UserInterface
      * @param string $role
      * @return $this
      */
-    public function addRole(string $role) : self
+    public function addRole(string $role): self
     {
         if (!in_array($role, $this->roles, true)) {
             $this->roles[] = $role;
@@ -184,5 +203,89 @@ class User implements UserInterface
     public function isAdmin(): bool
     {
         return in_array(Role::ROLE_ADMIN, $this->roles);
+    }
+
+    /**
+     * Returns createdAt.
+     *
+     * @return DateTime
+     */
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Sets createdAt.
+     * @ORM\PrePersist()
+     * @return $this
+     */
+    public function setCreatedAt(): self
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns updatedAt.
+     *
+     * @return DateTime
+     */
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Sets updatedAt.
+     * @ORM\PrePersist()
+     * @return $this
+     */
+    public function setUpdatedAt(): self
+    {
+        $this->updatedAt = new \DateTimeImmutable();
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getLastLoginDate(): ?DateTime
+    {
+        return $this->lastLoginDate;
+    }
+
+    /**
+     * @param DateTime|null $lastLoginDate
+     * @return $this
+     */
+    public function setLastLoginDate(?DateTime $lastLoginDate): self
+    {
+        $this->lastLoginDate = $lastLoginDate;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     * @return User
+     */
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
     }
 }

@@ -35,4 +35,21 @@ class UserRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * @return array
+     */
+    public function getInactiveUsers(): array
+    {
+        $oneMonthBefore = new \DateTime('-1 month');
+        $qb = $this->createQueryBuilder('u');
+        $expr = $qb->expr();
+        $qb
+            ->andWhere('JSON_CONTAINS(u.roles, :role) = 1')
+            ->setParameter('role', '"' . Role::ROLE_USER . '"')
+            ->andWhere($expr->lt('u.lastLoginDate', $expr->literal($oneMonthBefore->format('Y-m-d H:i:s'))))
+            ->andWhere($expr->eq('u.active', 1));
+
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -46,7 +46,7 @@ class UserModel
      */
     public function sendUserLoginDetails(string $password, string $email)
     {
-        $body = sprintf('Jūsų prisijungimo slaptažodis:%s', $password);
+        $body = sprintf('Jūsų prisijungimo slaptažodis:%s, el.paštas: %s', $password, $email);
         $message = (new EmailMessage())
             ->setBody($body)
             ->setSubject('Nauja registracija')

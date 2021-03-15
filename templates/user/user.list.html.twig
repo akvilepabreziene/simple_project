@@ -7,6 +7,8 @@
             <th scope="col">#</th>
             <th scope="col">Vardas</th>
             <th scope="col">El.paštas</th>
+            <th scope="col">Statusas</th>
+            <th>Paskutinis prisijungimas</th>
             <th scope="col">Veiksmai</th>
         </tr>
         </thead>
@@ -16,6 +18,8 @@
                 <th scope="row">{{ loop.index }}.</th>
                 <td>{{ user.getName() }}</td>
                 <td>{{ user.getEmail() }}</td>
+                <td>{{ user.isActive() ? 'Aktyvus' : 'Neaktyvus' }}</td>
+                <td>{{ user.getLastLoginDate()|date('Y-m-d H:i:s') }}</td>
                 <td>
                     <div class="btn-group btn-group-sm">
                         <a href="{{ path('edit_user', {'id' : user.getId()}) }}" type="button" class="btn btn-warning">Keisti</a>

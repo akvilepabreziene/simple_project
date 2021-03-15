@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
- * @Route("/user")
+ * @Route("admin/user")
  * Class UserController
  */
 class UserController extends AbstractController
@@ -92,15 +92,6 @@ class UserController extends AbstractController
      */
     public function masterAction(): Response
     {
-        $admin = (new User)
-            ->setName('admin')
-            ->setEmail('admin@admin')
-            ->addRole(Role::ROLE_ADMIN);
-        $password = $this->passwordEncoder->encodePassword($admin,'demo');
-        $admin->setPassword($password);
-        $this->em->persist($admin);
-        $this->em->flush();
-
         /** @var UserRepository $repo */
         $repo = $this->em->getRepository(User::class);
         $users = $repo->getAllUsers();
